@@ -25,12 +25,12 @@ export default {
 
   templates: {
     tier1: [
-      '{product} தரம் நன்றாக உள்ளது, SBJ Nirmal மீது மகிழ்ச்சி.',
+      '{product} தரம் {quality_word}, SBJ Nirmal மீது மகிழ்ச்சி.',
       '{quality_word} தரமான {product} நல்ல விலையில். பரிந்துரைக்கிறேன்.',
       'இங்கு சிறந்த {product} கிடைக்கும், டெலிவரியும் {delivery_word}.',
       'அனைத்து {product} {quality_word} தரத்தில் சிறந்த விலையில் கிடைக்கும். நம்பகமான நிறுவனம்.',
-      'SBJ Nirmal இலிருந்து நல்ல தரமான {product}.',
-      '{product} தரம் நன்றாக உள்ளது, சிறந்த விலை. மீண்டும் ஆர்டர் செய்வேன்.',
+      'SBJ Nirmal இலிருந்து {quality_word} தரமான {product}.',
+      '{product} தரம் {quality_word}, சிறந்த விலை. மீண்டும் ஆர்டர் செய்வேன்.',
       'நம்பகமான நிறுவனம், {quality_word} தர பொருட்கள் மற்றும் {delivery_word} டெலிவரி.',
     ],
     tier2: [

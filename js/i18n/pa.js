@@ -25,12 +25,12 @@ export default {
 
   templates: {
     tier1: [
-      '{product} ਦੀ ਕੁਆਲਿਟੀ ਚੰਗੀ ਹੈ, SBJ Nirmal ਤੋਂ ਖੁਸ਼ ਹਾਂ।',
+      '{product} ਦੀ ਕੁਆਲਿਟੀ {quality_word} ਹੈ, SBJ Nirmal ਤੋਂ ਖੁਸ਼ ਹਾਂ।',
       '{quality_word} ਕੁਆਲਿਟੀ ਦੇ {product} ਵਧੀਆ ਰੇਟ \'ਤੇ। ਸਿਫਾਰਸ਼ ਕਰਦਾ ਹਾਂ।',
       'ਇੱਥੇ ਸਭ ਤੋਂ ਵਧੀਆ {product} ਮਿਲਦੇ ਹਨ, ਡਿਲੀਵਰੀ ਵੀ {delivery_word}।',
       'ਸਾਰੇ {product} {quality_word} ਕੁਆਲਿਟੀ ਵਿੱਚ ਸਭ ਤੋਂ ਵਧੀਆ ਕੀਮਤ \'ਤੇ ਮਿਲਦੇ ਹਨ। ਭਰੋਸੇਯੋਗ ਕੰਪਨੀ।',
-      'SBJ Nirmal ਤੋਂ ਵਧੀਆ ਕੁਆਲਿਟੀ ਦੇ {product}।',
-      '{product} ਦੀ ਕੁਆਲਿਟੀ ਚੰਗੀ ਹੈ, ਸਭ ਤੋਂ ਵਧੀਆ ਕੀਮਤ। ਦੁਬਾਰਾ ਆਰਡਰ ਕਰਾਂਗਾ।',
+      'SBJ Nirmal ਤੋਂ {quality_word} ਕੁਆਲਿਟੀ ਦੇ {product}।',
+      '{product} ਦੀ ਕੁਆਲਿਟੀ {quality_word} ਹੈ, ਸਭ ਤੋਂ ਵਧੀਆ ਕੀਮਤ। ਦੁਬਾਰਾ ਆਰਡਰ ਕਰਾਂਗਾ।',
       'ਭਰੋਸੇਯੋਗ ਕੰਪਨੀ, {quality_word} ਕੁਆਲਿਟੀ ਦੇ ਪ੍ਰੋਡਕਟਸ ਅਤੇ {delivery_word} ਡਿਲੀਵਰੀ।',
     ],
     tier2: [
