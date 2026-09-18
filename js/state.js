@@ -4,7 +4,7 @@ import { getLanguage } from './i18n/index.js';
 export function createState(langCode) {
   return {
     lang: langCode,
-    step: 'intro', // 'intro' | 'rating' | 'category' | 'questions' | 'draft'
+    step: 'rating', // 'rating' | 'category' | 'questions' | 'draft'
     rating: null,
     categoryId: null,
     questionIndex: 0,
@@ -18,10 +18,6 @@ export function createState(langCode) {
     draftLoaded: false,
     submitted: false,
   };
-}
-
-export function startReview(state) {
-  state.step = 'rating';
 }
 
 export function selectRating(state, rating) {
@@ -108,9 +104,7 @@ export function generateDraft(state) {
 }
 
 export function goBack(state) {
-  if (state.step === 'rating') {
-    state.step = 'intro';
-  } else if (state.step === 'category') {
+  if (state.step === 'category') {
     state.step = 'rating';
   } else if (state.step === 'questions') {
     if (state.questionIndex > 0) {
