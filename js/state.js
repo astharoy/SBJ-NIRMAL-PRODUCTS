@@ -1,4 +1,4 @@
-import { CATEGORY_IDS, QUESTIONS_PER_CATEGORY } from './constants.js';
+import { CATEGORY_IDS, QUESTIONS_PER_CATEGORY, TEMPLATE_TIER_WEIGHTS } from './constants.js';
 import { getLanguage } from './i18n/index.js';
 
 export function createState(langCode) {
@@ -42,12 +42,50 @@ export function answerQuestion(state, optionIndex) {
   }
 }
 
+function pickWeightedTier() {
+  const r = Math.random();
+  let cumulative = 0;
+  for (const [tier, weight] of TEMPLATE_TIER_WEIGHTS) {
+    cumulative += weight;
+    if (r < cumulative) return tier;
+  }
+  return TEMPLATE_TIER_WEIGHTS[TEMPLATE_TIER_WEIGHTS.length - 1][0];
+}
+
+function pickRandom(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function fillPlaceholders(template, values) {
+  return template.replace(/\{(\w+)\}/g, (match, key) => (key in values ? values[key] : match));
+}
+
+function capitalizeFirst(text) {
+  return text.length ? text[0].toUpperCase() + text.slice(1) : text;
+}
+
+// Fills the shared, tiered template bank (REVIEWSETU_BRIEF.md "REVISED
+// TEMPLATE SYSTEM") with the customer's actual tap answers. Q1 is always
+// the category's quality-type question, Q2 the distinguishing "aspect"
+// question, Q3 delivery speed — see js/i18n/en.js for the full mapping.
 export function generateDraft(state) {
   const lang = getLanguage(state.lang);
   const category = lang.categories[state.categoryId];
-  const templates = category.templates;
-  const pick = templates[Math.floor(Math.random() * templates.length)];
-  state.draftText = pick;
+  const [qualityQ, aspectQ, deliveryQ] = category.questions;
+  const [qualityIdx, aspectIdx, deliveryIdx] = state.answers;
+
+  const values = {
+    product: category.productName,
+    quality_word: qualityQ.options[qualityIdx],
+    aspect_word: aspectQ.options[aspectIdx],
+    aspect_word_sentence: aspectQ.sentences[aspectIdx],
+    delivery_word: (deliveryQ.insert || deliveryQ.options)[deliveryIdx],
+  };
+
+  const tier = pickWeightedTier();
+  const template = pickRandom(lang.templates[tier]);
+
+  state.draftText = capitalizeFirst(fillPlaceholders(template, values));
   state.submitted = false;
   // Only set true once text has actually been generated into the field.
   state.draftLoaded = true;

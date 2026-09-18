@@ -1,7 +1,9 @@
 // Telugu content for ReviewSetu Phase 1.
-// NOTE: content directly quoted from the project brief is marked below;
-// UI strings and the "Other" category templates are first-draft translations
-// and should get a native-speaker review before going live (see brief).
+// NOTE: UI strings and {product} noun forms are first-draft translations
+// (not directly quoted from the brief) and should get a native-speaker
+// review before going live (see brief's Translation Quality Note).
+// Template bank and Mini-Sentence Mapping Table text is quoted directly
+// from REVIEWSETU_BRIEF.md's REVISED TEMPLATE SYSTEM section.
 
 export default {
   code: 'te',
@@ -21,9 +23,31 @@ export default {
     comingSoon: 'గూగుల్ పోస్టింగ్ త్వరలో వస్తుంది! ప్రస్తుతానికి కింద ఉన్న రివ్యూను కాపీ చేసి మీరే పోస్ట్ చేయండి.',
   },
 
+  templates: {
+    tier1: [
+      '{product} నాణ్యత బాగుంది, SBJ Nirmal తో సంతోషంగా ఉన్నాను.',
+      '{quality_word} నాణ్యత {product} మంచి ధరకు. సిఫార్సు చేస్తున్నాను.',
+      'ఇక్కడ ఉత్తమమైన {product} లభిస్తాయి, డెలివరీ కూడా {delivery_word}.',
+      'అన్ని {product} {quality_word} నాణ్యతలో ఉత్తమ ధరకు లభిస్తాయి. నమ్మకమైన కంపెనీ.',
+      'SBJ Nirmal నుండి మంచి నాణ్యత గల {product}.',
+      '{product} నాణ్యత బాగుంది, ఉత్తమ ధర. మళ్ళీ ఆర్డర్ చేస్తాను.',
+      'నమ్మకమైన కంపెనీ, {quality_word} నాణ్యత ఉత్పత్తులు మరియు {delivery_word} డెలివరీ.',
+    ],
+    tier2: [
+      'SBJ Nirmal Products అత్యుత్తమ {product} అందించడంలో నైపుణ్యం కలిగి ఉంది. {quality_word} నాణ్యత, గట్టిగా సిఫార్సు చేస్తున్నాను.',
+      'SBJ Nirmal యొక్క {product} ఉపయోగించాను — {aspect_word_sentence}. డెలివరీ {delivery_word}గా ఉంది.',
+      '{product} కోసం ఉత్తమ సరఫరాదారు, {quality_word} నాణ్యత నిజమైన ధరకు.',
+      'SBJ Nirmal నుండి {product} ఆర్డర్ చేశాను — {quality_word} నాణ్యత, {aspect_word}, మరియు {delivery_word} డెలివరీ. మళ్ళీ ఆర్డర్ చేస్తాను.',
+    ],
+    tier3: [
+      'నేను ఇటీవల SBJ Nirmal యొక్క {product} ఉపయోగించాను, మరియు నాణ్యత పట్ల వారి నిబద్ధత నిజంగా ప్రతిబింబిస్తుంది. {aspect_word_sentence}, మరియు ఇది {delivery_word} చేరింది. చాలా సంతృప్తిగా ఉన్నాను.',
+    ],
+  },
+
   categories: {
     rotavator_blades: {
       label: 'రోటావేటర్ బ్లేడ్‌లు',
+      productName: 'రోటావేటర్ బ్లేడ్‌లు',
       questions: [
         {
           id: 'quality',
@@ -34,21 +58,24 @@ export default {
           id: 'fit',
           text: 'ఇది సరిగ్గా అమరిందా?',
           options: ['సరిగ్గా అమిరింది', 'కొంచెం సర్దుబాటు అవసరం', 'అమరలేదు'],
+          sentences: [
+            'ఫిట్మెంట్ ఖచ్చితంగా సరిగ్గా ఉంది',
+            'అమర్చడానికి కొంచెం సర్దుబాటు అవసరమైంది',
+            'దురదృష్టవశాత్తు ఇది సరిగ్గా అమరలేదు',
+          ],
         },
         {
           id: 'delivery',
           text: 'డెలివరీ వేగం ఎలా ఉంది?',
           options: ['వేగంగా (1-3 రోజులు)', 'సమయానికి', 'ఆలస్యం'],
+          insert: ['వేగంగా', 'సమయానికి', 'ఆలస్యం'],
         },
-      ],
-      templates: [
-        'బ్లేడ్ నాణ్యత అద్భుతంగా ఉంది మరియు సరిగ్గా అమిరింది.',
-        'బ్లేడ్ నాణ్యత చూసి చాలా సంతోషంగా ఉంది, సరైన ఫిట్.',
       ],
     },
 
     gears: {
       label: 'గేర్లు',
+      productName: 'గేర్లు',
       questions: [
         {
           id: 'quality',
@@ -59,18 +86,24 @@ export default {
           id: 'load',
           text: 'ఇది లోడ్ అవసరాలను తీర్చిందా?',
           options: ['అవును', 'ఎక్కువగా అవును', 'లేదు'],
+          sentences: [
+            'ఇది లోడ్‌ను ఖచ్చితంగా సరిగ్గా నిర్వహించింది',
+            'ఇది ఎక్కువగా లోడ్‌ను బాగా నిర్వహించింది',
+            'దీనికి లోడ్‌ను నిర్వహించడంలో ఇబ్బంది ఉంది',
+          ],
         },
         {
           id: 'delivery',
           text: 'డెలివరీ వేగం ఎలా ఉంది?',
           options: ['వేగంగా (1-3 రోజులు)', 'సమయానికి', 'ఆలస్యం'],
+          insert: ['వేగంగా', 'సమయానికి', 'ఆలస్యం'],
         },
       ],
-      templates: ['గేర్ల నిర్మాణ నాణ్యత అద్భుతంగా ఉంది, లోడ్‌ను బాగా తట్టుకుంది.'],
     },
 
     yoke: {
       label: 'యోక్',
+      productName: 'యోక్',
       questions: [
         {
           id: 'price_quality',
@@ -81,18 +114,24 @@ export default {
           id: 'fit',
           text: 'యోక్ సరిగ్గా అమిరిందా?',
           options: ['సరిగ్గా అమిరింది', 'కొంచెం సర్దుబాటు అవసరం', 'అమరలేదు'],
+          sentences: [
+            'ఫిట్మెంట్ ఖచ్చితంగా సరిగ్గా ఉంది',
+            'అమర్చడానికి కొంచెం సర్దుబాటు అవసరమైంది',
+            'దురదృష్టవశాత్తు ఇది సరిగ్గా అమరలేదు',
+          ],
         },
         {
           id: 'delivery',
           text: 'డెలివరీ వేగం ఎలా ఉంది?',
           options: ['వేగంగా (1-3 రోజులు)', 'సమయానికి', 'ఆలస్యం'],
+          insert: ['వేగంగా', 'సమయానికి', 'ఆలస్యం'],
         },
       ],
-      templates: ['ధర ప్రకారం చాలా బాగుంది, యోక్ సరిగ్గా అమిరింది.'],
     },
 
     pto_shaft: {
       label: 'పీటీఓ షాఫ్ట్ / ఇన్‌పుట్-అవుట్‌పుట్ షాఫ్ట్',
+      productName: 'పీటీఓ షాఫ్ట్',
       questions: [
         {
           id: 'quality',
@@ -103,18 +142,24 @@ export default {
           id: 'fit',
           text: 'ఇది మీ ట్రాక్టర్/రోటావేటర్ మోడల్‌కు సరిగ్గా అమరిందా?',
           options: ['సరిగ్గా అమిరింది', 'కొంచెం సర్దుబాటు అవసరం', 'అమరలేదు'],
+          sentences: [
+            'ఫిట్మెంట్ ఖచ్చితంగా సరిగ్గా ఉంది',
+            'అమర్చడానికి కొంచెం సర్దుబాటు అవసరమైంది',
+            'దురదృష్టవశాత్తు ఇది సరిగ్గా అమరలేదు',
+          ],
         },
         {
           id: 'delivery',
           text: 'డెలివరీ వేగం ఎలా ఉంది?',
           options: ['వేగంగా (1-3 రోజులు)', 'సమయానికి', 'ఆలస్యం'],
+          insert: ['వేగంగా', 'సమయానికి', 'ఆలస్యం'],
         },
       ],
-      templates: ['షాఫ్ట్ నిర్మాణ నాణ్యత అద్భుతంగా ఉంది మరియు సరిగ్గా అమిరింది.'],
     },
 
     lubrication: {
       label: 'లూబ్రికేషన్ (గేర్ ఆయిల్ / గ్రీజు)',
+      productName: 'గేర్ ఆయిల్/గ్రీజు',
       questions: [
         {
           id: 'performance',
@@ -125,18 +170,24 @@ export default {
           id: 'wear',
           text: 'ఇది అరుగుదల/రాపిడిని తగ్గించిందా?',
           options: ['అవును, గణనీయంగా', 'కొంతవరకు', 'పెద్దగా లేదు'],
+          sentences: [
+            'ఇది అరుగుదల మరియు రాపిడిని గణనీయంగా తగ్గించింది',
+            'ఇది ఆశించిన విధంగా కొంతవరకు అరుగుదలను తగ్గించింది',
+            'ఇది ఆశించినంతగా అరుగుదలను తగ్గించలేదు',
+          ],
         },
         {
           id: 'delivery',
           text: 'డెలివరీ వేగం ఎలా ఉంది?',
           options: ['వేగంగా (1-3 రోజులు)', 'సమయానికి', 'ఆలస్యం'],
+          insert: ['వేగంగా', 'సమయానికి', 'ఆలస్యం'],
         },
       ],
-      templates: ['గేర్ ఆయిల్ పనితీరు అద్భుతంగా ఉంది, అరుగుదల గణనీయంగా తగ్గింది.'],
     },
 
     other: {
       label: 'ఇతర',
+      productName: 'ఉత్పత్తులు',
       questions: [
         {
           id: 'quality',
@@ -147,16 +198,18 @@ export default {
           id: 'expectations',
           text: 'ఇది మీ అంచనాలను అందుకుందా?',
           options: ['అవును', 'ఎక్కువగా అవును', 'లేదు'],
+          sentences: [
+            'ఇది నా అంచనాలను పూర్తిగా అందుకుంది',
+            'ఇది ఎక్కువగా నా అంచనాలను అందుకుంది',
+            'ఇది నా అంచనాలను పూర్తిగా అందుకోలేదు',
+          ],
         },
         {
           id: 'delivery',
           text: 'డెలివరీ వేగం ఎలా ఉంది?',
           options: ['వేగంగా (1-3 రోజులు)', 'సమయానికి', 'ఆలస్యం'],
+          insert: ['వేగంగా', 'సమయానికి', 'ఆలస్యం'],
         },
-      ],
-      templates: [
-        'మొత్తం నాణ్యత అద్భుతంగా ఉంది మరియు ఇది నా అంచనాలను అందుకుంది.',
-        'మంచి ఉత్పత్తి, నాకు కావాల్సింది దొరికింది, డెలివరీ సమయానికి జరిగింది.',
       ],
     },
   },
