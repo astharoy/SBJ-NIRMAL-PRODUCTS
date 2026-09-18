@@ -1,5 +1,13 @@
 # ReviewSetu — Project Brief for Claude Code
 
+> **Revision note:** This brief has been corrected in four places after review. Search for "Correction" to find each one:
+> 1. Phase 2 — Google does not support pre-filled review text or iframe embedding; replaced with copy→redirect→paste→return flow.
+> 2. Yoke category — added an explicit exception rule for `{quality_word}` when Q1 = "Expensive."
+> 3. Tier 1 template bank — three static templates (#1, #5, #6, all languages) now include `{quality_word}` so they can't fire disconnected from the customer's actual answer.
+> 4. Mini-Sentence Mapping Table Group 3 (Yoke price/quality) — marked dead, do not wire up; it was written for a placeholder slot that doesn't exist in the actual fill logic.
+>
+> The mechanical HI/PA/TE/TA translations added for fix #3 are literal insertions, not reviewed by a native speaker — they need the same native-speaker check the brief already requires before anything goes live (see "Translation Quality Note").
+
 ## Brand Colors (Light Mode)
 - **Primary Red:** `#D32F2F`
 - **Black (text/accents):** `#1A1A1A`
@@ -131,6 +139,11 @@ English, Hindi, Punjabi, Telugu, Tamil
 **Q2 — Fitment?** (same option set as blade fit question)
 **Q3 — Delivery speed?** (same option set as above)
 
+### Yoke exception rule (added — do not skip)
+Yoke's Q1 answers ("Great value" / "Fair" / "Expensive") are not quality words, and must not be inserted into any template that uses the bare `{quality_word}` placeholder built for other categories. "Great value" and "Fair" read acceptably in those templates; "Expensive" does not — e.g. "All yoke available in Expensive quality at best price" is nonsensical and reads as the customer praising overpaying, which is worse than the grammar break.
+
+**Rule:** when `categoryId === 'yoke'` AND the Q1 answer is "Expensive," draft generation must exclude every template that uses bare `{quality_word}` and select only from templates built around `{aspect_word}` / `{aspect_word_sentence}` / `{delivery_word}` (Yoke's Q2/fitment, via the Group 1 mini-sentence table). When Q1 is "Great value" or "Fair," Yoke is eligible for the full template set as normal. Do not solve this by substituting a softer word for "Expensive" (e.g. "premium") — that converts a price complaint into false praise, which violates the edge-case rule below against sentiment manipulation.
+
 **Templates:**
 - EN-A: "Great value for the price, and the yoke fit perfectly."
 - EN-B: "The yoke was a perfect fit and great value for money."
@@ -180,8 +193,17 @@ Same question structure as Rotavator Blades: build quality, fitment (to tractor/
 
 ---
 
-## Phase 2 — Google Review Integration (Later)
-Wire the "Post Review" button to open the edited draft pre-filled into the Google Business Profile review link. Customer completes the final submit on Google's own page — no auto-post.
+## Phase 2 — Google Review Handoff (Later)
+
+### Correction (superseded)
+The original version of this section assumed the draft could be pre-filled into the Google Business Profile review link. **This is not possible.** Google's write-review page (`search.google.com/local/writereview?...`) sets `X-Frame-Options: sameorigin` and does not accept a text pre-fill parameter — both by design, to prevent scripted/fake reviews. An iframe embed of that page is also blocked by the same header; it cannot be displayed inside our app under any circumstance. Do not attempt either approach.
+
+### Actual flow
+1. Customer taps "Post Review." The app copies `draftText` to the clipboard (`navigator.clipboard.writeText`) and opens Google's review link for the SBJ Nirmal listing in a **new tab**. The original tab stays open with the draft still visible.
+2. The new tab (our own page, not Google's) shows numbered, localized instructions: tap the stars, tap the review box, paste, tap Post. [Placeholder — replace once we redirect straight to Google's page rather than an interstitial; confirm which approach before building.]
+3. There is **no way to detect or confirm** that the customer actually posted on Google — no return URL, no webhook, no callback. Do not build anything that claims to verify submission.
+4. When the customer returns to the original tab (detected via the `visibilitychange` event — not a signal from Google), show a thank-you message. This confirms only that they came back to the tab, not that they posted.
+5. Google review link (Place ID) for this listing: **[TO BE FILLED IN]** — get this from the business's Google Business Profile before building this phase.
 
 ## Phase 3 — Delivery Trigger & Distribution (Later)
 QR code / shareable link on invoices and delivery packaging. Decide manual trigger vs. WhatsApp Business API automation (AiSensy/WATI/Interakt).
@@ -235,15 +257,18 @@ Build in plain JavaScript (HTML/CSS/JS) — no framework — for Phase 1. Host o
 ## Why this changed
 Real customer reviews for this business were analyzed and found to be mostly short (1 sentence), casually phrased, and varied in structure — not long or polished. The template bank below reflects that real distribution instead of assuming longer reviews are more natural.
 
+### Correction — Tier 1 static templates
+Tier 1 is selected ~70% of the time. Three of its original seven templates (#1, #5, #6 below) had no placeholder tied to any tap answer — a customer who answered Average / Didn't fit / Delayed could still get an unconditionally positive draft. All three now include `{quality_word}` so the draft always reflects at least the customer's Q1 answer. Apply the same fix to the equivalent Hindi/Punjabi/Telugu/Tamil tier1 lists below (#1, #5, #6 in each) — translate the corrected English wording, don't reuse the old static phrasing.
+
 ## Template Bank (English base)
 
 **Tier 1 — Short (select ~70% of the time):**
-1. "Good quality {product}, happy with SBJ Nirmal."
+1. "{quality_word} quality {product}, happy with SBJ Nirmal."
 2. "{quality_word} quality {product} at a good rate. Recommended."
 3. "Best {product} available here, {delivery_word} delivery too."
 4. "All {product} available in {quality_word} quality at best price. Trusted company."
-5. "Nice quality {product} from SBJ Nirmal."
-6. "{product} is good quality, best price. Will order again."
+5. "{quality_word} quality {product} from SBJ Nirmal."
+6. "{product} is {quality_word} quality, best price. Will order again."
 7. "Trusted company, {quality_word} quality products and {delivery_word} delivery."
 
 **Tier 2 — Medium (select ~25% of the time):**
@@ -266,12 +291,12 @@ Real customer reviews for this business were analyzed and found to be mostly sho
    - `{delivery_word}` → Q3 tap answer (e.g., "fast," "on time")
 
 ## Templates — Hindi (HI)
-1. "{product} की क्वालिटी अच्छी है, SBJ Nirmal से खुश हूं।"
+1. "{product} की क्वालिटी {quality_word} है, SBJ Nirmal से खुश हूं।"
 2. "{quality_word} क्वालिटी के {product} अच्छे रेट पर। सुझाव देता हूं।"
 3. "यहां सबसे अच्छे {product} मिलते हैं, डिलीवरी भी {delivery_word}।"
 4. "सभी {product} {quality_word} क्वालिटी में सबसे अच्छे दाम पर मिलते हैं। भरोसेमंद कंपनी।"
-5. "SBJ Nirmal से अच्छी क्वालिटी के {product}।"
-6. "{product} की क्वालिटी अच्छी है, सबसे अच्छा दाम। दोबारा ऑर्डर करूंगा।"
+5. "SBJ Nirmal से {quality_word} क्वालिटी के {product}।"
+6. "{product} की क्वालिटी {quality_word} है, सबसे अच्छा दाम। दोबारा ऑर्डर करूंगा।"
 7. "भरोसेमंद कंपनी, {quality_word} क्वालिटी के प्रोडक्ट्स और {delivery_word} डिलीवरी।"
 8. "SBJ Nirmal Products बेहतरीन {product} देने में माहिर है। {quality_word} क्वालिटी, बहुत सुझाव देता हूं।"
 9. "SBJ Nirmal के {product} इस्तेमाल किए — {aspect_word_sentence}। डिलीवरी {delivery_word} थी।"
@@ -280,12 +305,12 @@ Real customer reviews for this business were analyzed and found to be mostly sho
 12. "मैंने हाल ही में SBJ Nirmal के {product} इस्तेमाल किए, और उनकी क्वालिटी के प्रति प्रतिबद्धता साफ झलकती है। {aspect_word_sentence}, और यह {delivery_word} पहुंचा। बहुत संतुष्ट हूं।"
 
 ## Templates — Punjabi (PA)
-1. "{product} ਦੀ ਕੁਆਲਿਟੀ ਚੰਗੀ ਹੈ, SBJ Nirmal ਤੋਂ ਖੁਸ਼ ਹਾਂ।"
+1. "{product} ਦੀ ਕੁਆਲਿਟੀ {quality_word} ਹੈ, SBJ Nirmal ਤੋਂ ਖੁਸ਼ ਹਾਂ।"
 2. "{quality_word} ਕੁਆਲਿਟੀ ਦੇ {product} ਵਧੀਆ ਰੇਟ 'ਤੇ। ਸਿਫਾਰਸ਼ ਕਰਦਾ ਹਾਂ।"
 3. "ਇੱਥੇ ਸਭ ਤੋਂ ਵਧੀਆ {product} ਮਿਲਦੇ ਹਨ, ਡਿਲੀਵਰੀ ਵੀ {delivery_word}।"
 4. "ਸਾਰੇ {product} {quality_word} ਕੁਆਲਿਟੀ ਵਿੱਚ ਸਭ ਤੋਂ ਵਧੀਆ ਕੀਮਤ 'ਤੇ ਮਿਲਦੇ ਹਨ। ਭਰੋਸੇਯੋਗ ਕੰਪਨੀ।"
-5. "SBJ Nirmal ਤੋਂ ਵਧੀਆ ਕੁਆਲਿਟੀ ਦੇ {product}।"
-6. "{product} ਦੀ ਕੁਆਲਿਟੀ ਚੰਗੀ ਹੈ, ਸਭ ਤੋਂ ਵਧੀਆ ਕੀਮਤ। ਦੁਬਾਰਾ ਆਰਡਰ ਕਰਾਂਗਾ।"
+5. "SBJ Nirmal ਤੋਂ {quality_word} ਕੁਆਲਿਟੀ ਦੇ {product}।"
+6. "{product} ਦੀ ਕੁਆਲਿਟੀ {quality_word} ਹੈ, ਸਭ ਤੋਂ ਵਧੀਆ ਕੀਮਤ। ਦੁਬਾਰਾ ਆਰਡਰ ਕਰਾਂਗਾ।"
 7. "ਭਰੋਸੇਯੋਗ ਕੰਪਨੀ, {quality_word} ਕੁਆਲਿਟੀ ਦੇ ਪ੍ਰੋਡਕਟਸ ਅਤੇ {delivery_word} ਡਿਲੀਵਰੀ।"
 8. "SBJ Nirmal Products ਵਧੀਆ {product} ਦੇਣ ਵਿੱਚ ਮਾਹਿਰ ਹੈ। {quality_word} ਕੁਆਲਿਟੀ, ਬਹੁਤ ਸਿਫਾਰਸ਼ ਕਰਦਾ ਹਾਂ।"
 9. "SBJ Nirmal ਦੇ {product} ਵਰਤੇ — {aspect_word_sentence}। ਡਿਲੀਵਰੀ {delivery_word} ਸੀ।"
@@ -294,12 +319,12 @@ Real customer reviews for this business were analyzed and found to be mostly sho
 12. "ਮੈਂ ਹਾਲ ਹੀ ਵਿੱਚ SBJ Nirmal ਦੇ {product} ਵਰਤੇ, ਅਤੇ ਉਹਨਾਂ ਦੀ ਕੁਆਲਿਟੀ ਪ੍ਰਤੀ ਵਚਨਬੱਧਤਾ ਸਾਫ਼ ਦਿਖਦੀ ਹੈ। {aspect_word_sentence}, ਅਤੇ ਇਹ {delivery_word} ਪਹੁੰਚਿਆ। ਬਹੁਤ ਸੰਤੁਸ਼ਟ ਹਾਂ।"
 
 ## Templates — Telugu (TE)
-1. "{product} నాణ్యత బాగుంది, SBJ Nirmal తో సంతోషంగా ఉన్నాను."
+1. "{product} నాణ్యత {quality_word}, SBJ Nirmal తో సంతోషంగా ఉన్నాను."
 2. "{quality_word} నాణ్యత {product} మంచి ధరకు. సిఫార్సు చేస్తున్నాను."
 3. "ఇక్కడ ఉత్తమమైన {product} లభిస్తాయి, డెలివరీ కూడా {delivery_word}."
 4. "అన్ని {product} {quality_word} నాణ్యతలో ఉత్తమ ధరకు లభిస్తాయి. నమ్మకమైన కంపెనీ."
-5. "SBJ Nirmal నుండి మంచి నాణ్యత గల {product}."
-6. "{product} నాణ్యత బాగుంది, ఉత్తమ ధర. మళ్ళీ ఆర్డర్ చేస్తాను."
+5. "SBJ Nirmal నుండి {quality_word} నాణ్యత గల {product}."
+6. "{product} నాణ్యత {quality_word}, ఉత్తమ ధర. మళ్ళీ ఆర్డర్ చేస్తాను."
 7. "నమ్మకమైన కంపెనీ, {quality_word} నాణ్యత ఉత్పత్తులు మరియు {delivery_word} డెలివరీ."
 8. "SBJ Nirmal Products అత్యుత్తమ {product} అందించడంలో నైపుణ్యం కలిగి ఉంది. {quality_word} నాణ్యత, గట్టిగా సిఫార్సు చేస్తున్నాను."
 9. "SBJ Nirmal యొక్క {product} ఉపయోగించాను — {aspect_word_sentence}. డెలివరీ {delivery_word}గా ఉంది."
@@ -308,12 +333,12 @@ Real customer reviews for this business were analyzed and found to be mostly sho
 12. "నేను ఇటీవల SBJ Nirmal యొక్క {product} ఉపయోగించాను, మరియు నాణ్యత పట్ల వారి నిబద్ధత నిజంగా ప్రతిబింబిస్తుంది. {aspect_word_sentence}, మరియు ఇది {delivery_word} చేరింది. చాలా సంతృప్తిగా ఉన్నాను."
 
 ## Templates — Tamil (TA)
-1. "{product} தரம் நன்றாக உள்ளது, SBJ Nirmal மீது மகிழ்ச்சி."
+1. "{product} தரம் {quality_word}, SBJ Nirmal மீது மகிழ்ச்சி."
 2. "{quality_word} தரமான {product} நல்ல விலையில். பரிந்துரைக்கிறேன்."
 3. "இங்கு சிறந்த {product} கிடைக்கும், டெலிவரியும் {delivery_word}."
 4. "அனைத்து {product} {quality_word} தரத்தில் சிறந்த விலையில் கிடைக்கும். நம்பகமான நிறுவனம்."
-5. "SBJ Nirmal இலிருந்து நல்ல தரமான {product}."
-6. "{product} தரம் நன்றாக உள்ளது, சிறந்த விலை. மீண்டும் ஆர்டர் செய்வேன்."
+5. "SBJ Nirmal இலிருந்து {quality_word} தரமான {product}."
+6. "{product} தரம் {quality_word}, சிறந்த விலை. மீண்டும் ஆர்டர் செய்வேன்."
 7. "நம்பகமான நிறுவனம், {quality_word} தர பொருட்கள் மற்றும் {delivery_word} டெலிவரி."
 8. "SBJ Nirmal Products சிறந்த {product} வழங்குவதில் திறமையானது. {quality_word} தரம், மிகவும் பரிந்துரைக்கிறேன்."
 9. "SBJ Nirmal இன் {product} பயன்படுத்தினேன் — {aspect_word_sentence}. டெலிவரி {delivery_word} ஆக இருந்தது."
@@ -339,7 +364,8 @@ Real customer reviews for this business were analyzed and found to be mostly sho
 | Mostly | It mostly handled the load well | इसने ज़्यादातर लोड अच्छे से संभाला | ਇਸਨੇ ਜ਼ਿਆਦਾਤਰ ਲੋਡ ਵਧੀਆ ਸੰਭਾਲਿਆ | ఇది ఎక్కువగా లోడ్‌ను బాగా నిర్వహించింది | இது பெரும்பாலும் சுமையை நன்கு கையாண்டது |
 | No | It struggled with the load | इसे लोड संभालने में दिक्कत हुई | ਇਸਨੂੰ ਲੋਡ ਸੰਭਾਲਣ ਵਿੱਚ ਦਿੱਕਤ ਆਈ | దీనికి లోడ్‌ను నిర్వహించడంలో ఇబ్బంది ఉంది | இது சுமையைக் கையாள்வதில் சிரமப்பட்டது |
 
-### Group 3: Price vs. Quality (Yoke)
+### Group 3: Price vs. Quality (Yoke) — DEAD, DO NOT WIRE UP
+`{aspect_word_sentence}` is only ever filled from Q2. Yoke's price-vs-quality question is Q1 (see Yoke exception rule above), so this group has no placeholder to feed. Left below for reference only; do not connect it to any code path. Yoke's Q2 (fitment) already uses Group 1.
 | Tap Option | EN | HI | PA | TE | TA |
 |---|---|---|---|---|---|
 | Great value | It offered great value for the price | कीमत के हिसाब से यह बहुत बढ़िया वैल्यू था | ਕੀਮਤ ਦੇ ਹਿਸਾਬ ਨਾਲ ਇਹ ਬਹੁਤ ਵਧੀਆ ਵੈਲਿਊ ਸੀ | ధర ప్రకారం ఇది అద్భుతమైన విలువను అందించింది | விலைக்கு ஏற்ப இது சிறந்த மதிப்பை வழங்கியது |
