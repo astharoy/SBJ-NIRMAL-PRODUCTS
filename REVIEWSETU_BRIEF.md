@@ -225,3 +225,137 @@ Keep the codebase lean and minimal. Do not over-engineer or write more code than
 
 ## Language / Framework / Hosting
 Build in plain JavaScript (HTML/CSS/JS) — no framework — for Phase 1. Host on Vercel's free `.vercel.app` subdomain for testing. Final domain name and hosting platform (staying on Vercel vs. moving to a PHP-compatible host) are not yet decided and will be revisited later, once the domain is finalized. Do not block Phase 1 development on this decision.
+
+---
+
+# REVISED TEMPLATE SYSTEM (Supersedes per-category templates above)
+
+**Note for Claude Code:** The individual templates listed under each product category above (Sections 1-5, "Templates:" subsections) are now SUPERSEDED by the system below, which is based on real review data collected from the business's actual Google Maps reviews. Use ONLY the templates and logic in this section for draft generation. The questions, tap options, and category structure above remain unchanged — only the draft-generation templates are replaced.
+
+## Why this changed
+Real customer reviews for this business were analyzed and found to be mostly short (1 sentence), casually phrased, and varied in structure — not long or polished. The template bank below reflects that real distribution instead of assuming longer reviews are more natural.
+
+## Template Bank (English base)
+
+**Tier 1 — Short (select ~70% of the time):**
+1. "Good quality {product}, happy with SBJ Nirmal."
+2. "{quality_word} quality {product} at a good rate. Recommended."
+3. "Best {product} available here, {delivery_word} delivery too."
+4. "All {product} available in {quality_word} quality at best price. Trusted company."
+5. "Nice quality {product} from SBJ Nirmal."
+6. "{product} is good quality, best price. Will order again."
+7. "Trusted company, {quality_word} quality products and {delivery_word} delivery."
+
+**Tier 2 — Medium (select ~25% of the time):**
+8. "SBJ Nirmal Products excels in providing top-notch {product}. {quality_word} quality, highly recommended."
+9. "Used {product} from SBJ Nirmal — {aspect_word_sentence}. Delivery was {delivery_word}."
+10. "Best supplier for {product}, {quality_word} quality at a genuine rate."
+11. "Ordered {product} from SBJ Nirmal — {quality_word} quality, {aspect_word}, and {delivery_word} delivery. Would order again."
+
+**Tier 3 — Longer/personal (select ~5% of the time, rare):**
+12. "I recently used the {product} from SBJ Nirmal, and their commitment to quality truly shines through. {aspect_word_sentence}, and it arrived {delivery_word}. Very satisfied."
+
+## Selection logic
+1. Randomly pick a tier, weighted 70% Tier 1 / 25% Tier 2 / 5% Tier 3
+2. Randomly pick one template within that tier
+3. Fill placeholders from the customer's actual tap selections:
+   - `{product}` → selected category name (e.g., "rotavator blades")
+   - `{quality_word}` → Q1 tap answer, inserted as a word/short phrase (e.g., "Excellent")
+   - `{aspect_word}` → Q2 tap answer, inserted as a word/short phrase
+   - `{aspect_word_sentence}` → Q2 tap answer rephrased as a natural mini-sentence — use the Mini-Sentence Mapping Table below, do NOT just insert the raw tap label
+   - `{delivery_word}` → Q3 tap answer (e.g., "fast," "on time")
+
+## Templates — Hindi (HI)
+1. "{product} की क्वालिटी अच्छी है, SBJ Nirmal से खुश हूं।"
+2. "{quality_word} क्वालिटी के {product} अच्छे रेट पर। सुझाव देता हूं।"
+3. "यहां सबसे अच्छे {product} मिलते हैं, डिलीवरी भी {delivery_word}।"
+4. "सभी {product} {quality_word} क्वालिटी में सबसे अच्छे दाम पर मिलते हैं। भरोसेमंद कंपनी।"
+5. "SBJ Nirmal से अच्छी क्वालिटी के {product}।"
+6. "{product} की क्वालिटी अच्छी है, सबसे अच्छा दाम। दोबारा ऑर्डर करूंगा।"
+7. "भरोसेमंद कंपनी, {quality_word} क्वालिटी के प्रोडक्ट्स और {delivery_word} डिलीवरी।"
+8. "SBJ Nirmal Products बेहतरीन {product} देने में माहिर है। {quality_word} क्वालिटी, बहुत सुझाव देता हूं।"
+9. "SBJ Nirmal के {product} इस्तेमाल किए — {aspect_word_sentence}। डिलीवरी {delivery_word} थी।"
+10. "{product} के लिए सबसे अच्छा सप्लायर, {quality_word} क्वालिटी असली दाम पर।"
+11. "SBJ Nirmal से {product} ऑर्डर किए — {quality_word} क्वालिटी, {aspect_word}, और {delivery_word} डिलीवरी। दोबारा ऑर्डर करूंगा।"
+12. "मैंने हाल ही में SBJ Nirmal के {product} इस्तेमाल किए, और उनकी क्वालिटी के प्रति प्रतिबद्धता साफ झलकती है। {aspect_word_sentence}, और यह {delivery_word} पहुंचा। बहुत संतुष्ट हूं।"
+
+## Templates — Punjabi (PA)
+1. "{product} ਦੀ ਕੁਆਲਿਟੀ ਚੰਗੀ ਹੈ, SBJ Nirmal ਤੋਂ ਖੁਸ਼ ਹਾਂ।"
+2. "{quality_word} ਕੁਆਲਿਟੀ ਦੇ {product} ਵਧੀਆ ਰੇਟ 'ਤੇ। ਸਿਫਾਰਸ਼ ਕਰਦਾ ਹਾਂ।"
+3. "ਇੱਥੇ ਸਭ ਤੋਂ ਵਧੀਆ {product} ਮਿਲਦੇ ਹਨ, ਡਿਲੀਵਰੀ ਵੀ {delivery_word}।"
+4. "ਸਾਰੇ {product} {quality_word} ਕੁਆਲਿਟੀ ਵਿੱਚ ਸਭ ਤੋਂ ਵਧੀਆ ਕੀਮਤ 'ਤੇ ਮਿਲਦੇ ਹਨ। ਭਰੋਸੇਯੋਗ ਕੰਪਨੀ।"
+5. "SBJ Nirmal ਤੋਂ ਵਧੀਆ ਕੁਆਲਿਟੀ ਦੇ {product}।"
+6. "{product} ਦੀ ਕੁਆਲਿਟੀ ਚੰਗੀ ਹੈ, ਸਭ ਤੋਂ ਵਧੀਆ ਕੀਮਤ। ਦੁਬਾਰਾ ਆਰਡਰ ਕਰਾਂਗਾ।"
+7. "ਭਰੋਸੇਯੋਗ ਕੰਪਨੀ, {quality_word} ਕੁਆਲਿਟੀ ਦੇ ਪ੍ਰੋਡਕਟਸ ਅਤੇ {delivery_word} ਡਿਲੀਵਰੀ।"
+8. "SBJ Nirmal Products ਵਧੀਆ {product} ਦੇਣ ਵਿੱਚ ਮਾਹਿਰ ਹੈ। {quality_word} ਕੁਆਲਿਟੀ, ਬਹੁਤ ਸਿਫਾਰਸ਼ ਕਰਦਾ ਹਾਂ।"
+9. "SBJ Nirmal ਦੇ {product} ਵਰਤੇ — {aspect_word_sentence}। ਡਿਲੀਵਰੀ {delivery_word} ਸੀ।"
+10. "{product} ਲਈ ਸਭ ਤੋਂ ਵਧੀਆ ਸਪਲਾਇਰ, {quality_word} ਕੁਆਲਿਟੀ ਅਸਲੀ ਕੀਮਤ 'ਤੇ।"
+11. "SBJ Nirmal ਤੋਂ {product} ਆਰਡਰ ਕੀਤੇ — {quality_word} ਕੁਆਲਿਟੀ, {aspect_word}, ਅਤੇ {delivery_word} ਡਿਲੀਵਰੀ। ਦੁਬਾਰਾ ਆਰਡਰ ਕਰਾਂਗਾ।"
+12. "ਮੈਂ ਹਾਲ ਹੀ ਵਿੱਚ SBJ Nirmal ਦੇ {product} ਵਰਤੇ, ਅਤੇ ਉਹਨਾਂ ਦੀ ਕੁਆਲਿਟੀ ਪ੍ਰਤੀ ਵਚਨਬੱਧਤਾ ਸਾਫ਼ ਦਿਖਦੀ ਹੈ। {aspect_word_sentence}, ਅਤੇ ਇਹ {delivery_word} ਪਹੁੰਚਿਆ। ਬਹੁਤ ਸੰਤੁਸ਼ਟ ਹਾਂ।"
+
+## Templates — Telugu (TE)
+1. "{product} నాణ్యత బాగుంది, SBJ Nirmal తో సంతోషంగా ఉన్నాను."
+2. "{quality_word} నాణ్యత {product} మంచి ధరకు. సిఫార్సు చేస్తున్నాను."
+3. "ఇక్కడ ఉత్తమమైన {product} లభిస్తాయి, డెలివరీ కూడా {delivery_word}."
+4. "అన్ని {product} {quality_word} నాణ్యతలో ఉత్తమ ధరకు లభిస్తాయి. నమ్మకమైన కంపెనీ."
+5. "SBJ Nirmal నుండి మంచి నాణ్యత గల {product}."
+6. "{product} నాణ్యత బాగుంది, ఉత్తమ ధర. మళ్ళీ ఆర్డర్ చేస్తాను."
+7. "నమ్మకమైన కంపెనీ, {quality_word} నాణ్యత ఉత్పత్తులు మరియు {delivery_word} డెలివరీ."
+8. "SBJ Nirmal Products అత్యుత్తమ {product} అందించడంలో నైపుణ్యం కలిగి ఉంది. {quality_word} నాణ్యత, గట్టిగా సిఫార్సు చేస్తున్నాను."
+9. "SBJ Nirmal యొక్క {product} ఉపయోగించాను — {aspect_word_sentence}. డెలివరీ {delivery_word}గా ఉంది."
+10. "{product} కోసం ఉత్తమ సరఫరాదారు, {quality_word} నాణ్యత నిజమైన ధరకు."
+11. "SBJ Nirmal నుండి {product} ఆర్డర్ చేశాను — {quality_word} నాణ్యత, {aspect_word}, మరియు {delivery_word} డెలివరీ. మళ్ళీ ఆర్డర్ చేస్తాను."
+12. "నేను ఇటీవల SBJ Nirmal యొక్క {product} ఉపయోగించాను, మరియు నాణ్యత పట్ల వారి నిబద్ధత నిజంగా ప్రతిబింబిస్తుంది. {aspect_word_sentence}, మరియు ఇది {delivery_word} చేరింది. చాలా సంతృప్తిగా ఉన్నాను."
+
+## Templates — Tamil (TA)
+1. "{product} தரம் நன்றாக உள்ளது, SBJ Nirmal மீது மகிழ்ச்சி."
+2. "{quality_word} தரமான {product} நல்ல விலையில். பரிந்துரைக்கிறேன்."
+3. "இங்கு சிறந்த {product} கிடைக்கும், டெலிவரியும் {delivery_word}."
+4. "அனைத்து {product} {quality_word} தரத்தில் சிறந்த விலையில் கிடைக்கும். நம்பகமான நிறுவனம்."
+5. "SBJ Nirmal இலிருந்து நல்ல தரமான {product}."
+6. "{product} தரம் நன்றாக உள்ளது, சிறந்த விலை. மீண்டும் ஆர்டர் செய்வேன்."
+7. "நம்பகமான நிறுவனம், {quality_word} தர பொருட்கள் மற்றும் {delivery_word} டெலிவரி."
+8. "SBJ Nirmal Products சிறந்த {product} வழங்குவதில் திறமையானது. {quality_word} தரம், மிகவும் பரிந்துரைக்கிறேன்."
+9. "SBJ Nirmal இன் {product} பயன்படுத்தினேன் — {aspect_word_sentence}. டெலிவரி {delivery_word} ஆக இருந்தது."
+10. "{product} க்கு சிறந்த சப்ளையர், {quality_word} தரம் உண்மையான விலையில்."
+11. "SBJ Nirmal இலிருந்து {product} ஆர்டர் செய்தேன் — {quality_word} தரம், {aspect_word}, மற்றும் {delivery_word} டெலிவரி. மீண்டும் ஆர்டர் செய்வேன்."
+12. "நான் சமீபத்தில் SBJ Nirmal இன் {product} பயன்படுத்தினேன், மற்றும் தரத்தில் அவர்களின் அர்ப்பணிப்பு உண்மையிலேயே தெரிகிறது. {aspect_word_sentence}, மற்றும் இது {delivery_word} வந்தது. மிகவும் திருப்தியாக உள்ளேன்."
+
+---
+
+## Mini-Sentence Mapping Table (for {aspect_word_sentence} placeholder)
+
+### Group 1: Fitment (Blades, Yoke, PTO Shaft)
+| Tap Option | EN | HI | PA | TE | TA |
+|---|---|---|---|---|---|
+| Perfect fit | The fitment was perfect | फिटमेंट बिल्कुल सही था | ਫਿਟਮੈਂਟ ਬਿਲਕੁਲ ਸਹੀ ਸੀ | ఫిట్మెంట్ ఖచ్చితంగా సరిగ్గా ఉంది | பொருத்தம் சரியாக இருந்தது |
+| Needed adjustment | It needed a slight adjustment to fit | फिट करने के लिए थोड़ा एडजस्ट करना पड़ा | ਫਿੱਟ ਕਰਨ ਲਈ ਥੋੜ੍ਹਾ ਐਡਜਸਟ ਕਰਨਾ ਪਿਆ | అమర్చడానికి కొంచెం సర్దుబాటు అవసరమైంది | பொருத்த சிறிது சரிசெய்ய வேண்டியிருந்தது |
+| Didn't fit | Unfortunately it didn't fit correctly | दुर्भाग्य से यह सही फिट नहीं हुआ | ਬਦਕਿਸਮਤੀ ਨਾਲ ਇਹ ਸਹੀ ਫਿੱਟ ਨਹੀਂ ਹੋਇਆ | దురదృష్టవశాత్తు ఇది సరిగ్గా అమరలేదు | துரதிர்ஷ்டவசமாக இது சரியாகப் பொருந்தவில்லை |
+
+### Group 2: Load Handling (Gears)
+| Tap Option | EN | HI | PA | TE | TA |
+|---|---|---|---|---|---|
+| Yes | It handled the load perfectly | इसने लोड बिल्कुल सही तरीके से संभाला | ਇਸਨੇ ਲੋਡ ਬਿਲਕੁਲ ਸਹੀ ਢੰਗ ਨਾਲ ਸੰਭਾਲਿਆ | ఇది లోడ్‌ను ఖచ్చితంగా సరిగ్గా నిర్వహించింది | இது சுமையை சரியாகக் கையாண்டது |
+| Mostly | It mostly handled the load well | इसने ज़्यादातर लोड अच्छे से संभाला | ਇਸਨੇ ਜ਼ਿਆਦਾਤਰ ਲੋਡ ਵਧੀਆ ਸੰਭਾਲਿਆ | ఇది ఎక్కువగా లోడ్‌ను బాగా నిర్వహించింది | இது பெரும்பாலும் சுமையை நன்கு கையாண்டது |
+| No | It struggled with the load | इसे लोड संभालने में दिक्कत हुई | ਇਸਨੂੰ ਲੋਡ ਸੰਭਾਲਣ ਵਿੱਚ ਦਿੱਕਤ ਆਈ | దీనికి లోడ్‌ను నిర్వహించడంలో ఇబ్బంది ఉంది | இது சுமையைக் கையாள்வதில் சிரமப்பட்டது |
+
+### Group 3: Price vs. Quality (Yoke)
+| Tap Option | EN | HI | PA | TE | TA |
+|---|---|---|---|---|---|
+| Great value | It offered great value for the price | कीमत के हिसाब से यह बहुत बढ़िया वैल्यू था | ਕੀਮਤ ਦੇ ਹਿਸਾਬ ਨਾਲ ਇਹ ਬਹੁਤ ਵਧੀਆ ਵੈਲਿਊ ਸੀ | ధర ప్రకారం ఇది అద్భుతమైన విలువను అందించింది | விலைக்கு ஏற்ப இது சிறந்த மதிப்பை வழங்கியது |
+| Fair | The pricing was fair for the quality | क्वालिटी के हिसाब से कीमत ठीक-ठाक थी | ਕੁਆਲਿਟੀ ਦੇ ਹਿਸਾਬ ਨਾਲ ਕੀਮਤ ਠੀਕ-ਠਾਕ ਸੀ | నాణ్యత ప్రకారం ధర సాధారణంగా ఉంది | தரத்திற்கு ஏற்ப விலை நியாயமாக இருந்தது |
+| Expensive | It felt a bit expensive for what it offers | जो मिला उसके हिसाब से थोड़ा महंगा लगा | ਜੋ ਮਿਲਿਆ ਉਸ ਦੇ ਹਿਸਾਬ ਨਾਲ ਥੋੜ੍ਹਾ ਮਹਿੰਗਾ ਲੱਗਿਆ | లభించిన దాని ప్రకారం కొంచెం ఖరీదైనదిగా అనిపించింది | கிடைத்ததற்கு ஏற்ப சற்று விலை அதிகமாக உணர்ந்தேன் |
+
+### Group 4: Wear/Friction Reduction (Lubrication)
+| Tap Option | EN | HI | PA | TE | TA |
+|---|---|---|---|---|---|
+| Yes, noticeably | It noticeably reduced wear and friction | इसने घिसाव और घर्षण काफी हद तक कम किया | ਇਸਨੇ ਘਸਾਵਟ ਅਤੇ ਰਗੜ ਕਾਫੀ ਹੱਦ ਤੱਕ ਘਟਾਈ | ఇది అరుగుదల మరియు రాపిడిని గణనీయంగా తగ్గించింది | இது தேய்மானம் மற்றும் உராய்வை குறிப்பிடத்தக்க அளவில் குறைத்தது |
+| Somewhat | It somewhat reduced wear as expected | इसने उम्मीद के मुताबिक कुछ हद तक घिसाव कम किया | ਇਸਨੇ ਉਮੀਦ ਮੁਤਾਬਕ ਕੁਝ ਹੱਦ ਤੱਕ ਘਸਾਵਟ ਘਟਾਈ | ఇది ఆశించిన విధంగా కొంతవరకు అరుగుదలను తగ్గించింది | இது எதிர்பார்த்தபடி ஓரளவு தேய்மானத்தைக் குறைத்தது |
+| Not much | It didn't reduce wear as much as expected | इसने उम्मीद जितना घिसाव कम नहीं किया | ਇਸਨੇ ਉਮੀਦ ਜਿੰਨੀ ਘਸਾਵਟ ਨਹੀਂ ਘਟਾਈ | ఇది ఆశించినంతగా అరుగుదలను తగ్గించలేదు | இது எதிர்பார்த்தளவு தேய்மானத்தைக் குறைக்கவில்லை |
+
+### Group 5: Met Expectations (Other category)
+| Tap Option | EN | HI | PA | TE | TA |
+|---|---|---|---|---|---|
+| Yes | It fully met my expectations | यह मेरी उम्मीदों पर पूरी तरह खरा उतरा | ਇਹ ਮੇਰੀਆਂ ਉਮੀਦਾਂ 'ਤੇ ਪੂਰੀ ਤਰ੍ਹਾਂ ਖਰਾ ਉਤਰਿਆ | ఇది నా అంచనాలను పూర్తిగా అందుకుంది | இது என் எதிர்பார்ப்புகளை முழுமையாக பூர்த்தி செய்தது |
+| Mostly | It mostly met my expectations | यह ज़्यादातर मेरी उम्मीदों पर खरा उतरा | ਇਹ ਜ਼ਿਆਦਾਤਰ ਮੇਰੀਆਂ ਉਮੀਦਾਂ 'ਤੇ ਖਰਾ ਉਤਰਿਆ | ఇది ఎక్కువగా నా అంచనాలను అందుకుంది | இது பெரும்பாலும் என் எதிர்பார்ப்புகளை பூர்த்தி செய்தது |
+| No | It didn't quite meet my expectations | यह मेरी उम्मीदों पर पूरी तरह खरा नहीं उतरा | ਇਹ ਮੇਰੀਆਂ ਉਮੀਦਾਂ 'ਤੇ ਪੂਰੀ ਤਰ੍ਹਾਂ ਖਰਾ ਨਹੀਂ ਉਤਰਿਆ | ఇది నా అంచనాలను పూర్తిగా అందుకోలేదు | இது என் எதிர்பார்ப்புகளை முழுமையாக பூர்த்தி செய்யவில்லை |
