@@ -25,12 +25,12 @@ export default {
 
   templates: {
     tier1: [
-      '{product} की क्वालिटी अच्छी है, SBJ Nirmal से खुश हूं।',
+      '{product} की क्वालिटी {quality_word} है, SBJ Nirmal से खुश हूं।',
       '{quality_word} क्वालिटी के {product} अच्छे रेट पर। सुझाव देता हूं।',
       'यहां सबसे अच्छे {product} मिलते हैं, डिलीवरी भी {delivery_word}।',
       'सभी {product} {quality_word} क्वालिटी में सबसे अच्छे दाम पर मिलते हैं। भरोसेमंद कंपनी।',
-      'SBJ Nirmal से अच्छी क्वालिटी के {product}।',
-      '{product} की क्वालिटी अच्छी है, सबसे अच्छा दाम। दोबारा ऑर्डर करूंगा।',
+      'SBJ Nirmal से {quality_word} क्वालिटी के {product}।',
+      '{product} की क्वालिटी {quality_word} है, सबसे अच्छा दाम। दोबारा ऑर्डर करूंगा।',
       'भरोसेमंद कंपनी, {quality_word} क्वालिटी के प्रोडक्ट्स और {delivery_word} डिलीवरी।',
     ],
     tier2: [

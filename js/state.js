@@ -82,8 +82,20 @@ export function generateDraft(state) {
     delivery_word: (deliveryQ.insert || deliveryQ.options)[deliveryIdx],
   };
 
+  // Yoke exception rule (REVIEWSETU_BRIEF.md, "Yoke exception rule — added,
+  // do not skip"): Yoke's Q1 options are always ordered [Great value, Fair,
+  // Expensive] in every language, so index 2 is always "Expensive." That's
+  // not a quality word, so any template using bare {quality_word} must be
+  // excluded rather than filled with it — the brief explicitly forbids
+  // softening it to something like "premium" instead.
+  const excludeQualityWord = state.categoryId === 'yoke' && qualityIdx === 2;
+
   const tier = pickWeightedTier();
-  const template = pickRandom(lang.templates[tier]);
+  const tierTemplates = lang.templates[tier];
+  const candidates = excludeQualityWord
+    ? tierTemplates.filter((template) => !template.includes('{quality_word}'))
+    : tierTemplates;
+  const template = pickRandom(candidates.length ? candidates : tierTemplates);
 
   state.draftText = capitalizeFirst(fillPlaceholders(template, values));
   state.submitted = false;

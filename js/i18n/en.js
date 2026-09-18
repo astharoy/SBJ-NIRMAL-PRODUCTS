@@ -39,12 +39,12 @@ export default {
   // within that tier.
   templates: {
     tier1: [
-      'Good quality {product}, happy with SBJ Nirmal.',
+      '{quality_word} quality {product}, happy with SBJ Nirmal.',
       '{quality_word} quality {product} at a good rate. Recommended.',
       'Best {product} available here, {delivery_word} delivery too.',
       'All {product} available in {quality_word} quality at best price. Trusted company.',
-      'Nice quality {product} from SBJ Nirmal.',
-      '{product} is good quality, best price. Will order again.',
+      '{quality_word} quality {product} from SBJ Nirmal.',
+      '{product} is {quality_word} quality, best price. Will order again.',
       'Trusted company, {quality_word} quality products and {delivery_word} delivery.',
     ],
     tier2: [
