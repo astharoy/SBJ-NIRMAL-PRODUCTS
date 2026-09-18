@@ -29,7 +29,7 @@ export default {
     ],
     copyAgainBtn: 'ਰਿਵਿਊ ਟੈਕਸਟ ਦੁਬਾਰਾ ਕਾਪੀ ਕਰੋ',
     copiedFeedback: 'ਕਾਪੀ ਹੋ ਗਿਆ!',
-    openGoogleLinkText: 'ਗੂਗਲ ਰਿਵਿਊ ਪੇਜ ਖੋਲ੍ਹੋ',
+    continueToGoogleBtn: 'ਗੂਗਲ \'ਤੇ ਜਾਰੀ ਰੱਖੋ',
     thankYouTitle: 'ਧੰਨਵਾਦ!',
     thankYouMessage: 'ਉਮੀਦ ਹੈ ਤੁਸੀਂ ਗੂਗਲ \'ਤੇ ਆਪਣਾ ਰਿਵਿਊ ਪੋਸਟ ਕਰ ਦਿੱਤਾ ਹੋਵੇਗਾ। ਤੁਹਾਡੀ ਰਾਏ ਸਾਡੇ ਲਈ ਬਹੁਤ ਮਾਇਨੇ ਰੱਖਦੀ ਹੈ।',
   },

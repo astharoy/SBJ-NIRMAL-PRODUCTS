@@ -29,7 +29,7 @@ export default {
     ],
     copyAgainBtn: 'रिव्यू टेक्स्ट फिर से कॉपी करें',
     copiedFeedback: 'कॉपी हो गया!',
-    openGoogleLinkText: 'गूगल रिव्यू पेज खोलें',
+    continueToGoogleBtn: 'गूगल पर जारी रखें',
     thankYouTitle: 'धन्यवाद!',
     thankYouMessage: 'उम्मीद है आपने गूगल पर अपना रिव्यू पोस्ट कर दिया होगा। आपकी प्रतिक्रिया हमारे लिए बहुत मायने रखती है।',
   },

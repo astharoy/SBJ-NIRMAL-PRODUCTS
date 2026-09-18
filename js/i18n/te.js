@@ -29,7 +29,7 @@ export default {
     ],
     copyAgainBtn: 'రివ్యూ టెక్స్ట్‌ను మళ్లీ కాపీ చేయండి',
     copiedFeedback: 'కాపీ అయ్యింది!',
-    openGoogleLinkText: 'గూగుల్ రివ్యూ పేజీని తెరవండి',
+    continueToGoogleBtn: 'గూగుల్‌కు కొనసాగించండి',
     thankYouTitle: 'ధన్యవాదాలు!',
     thankYouMessage: 'మీరు గూగుల్‌లో మీ రివ్యూను పోస్ట్ చేసి ఉంటారని ఆశిస్తున్నాము. మీ అభిప్రాయం మాకు చాలా విలువైనది.',
   },

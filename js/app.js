@@ -195,7 +195,12 @@ function renderDraftStep() {
         // always re-opens the flow from the "finish on Google" step, even
         // if a previous attempt already reached the thank-you message.
         state.returned = false;
-        openGoogleReviewTab(state.draftText);
+        // Copy on this exact click — no navigation yet. Was originally a
+        // window.open() to a second tab, but that's unreliable inside a
+        // QR-scanner's in-app browser: it can navigate the only tab away
+        // instead of opening a new one, taking this panel with it. The
+        // customer continues to Google explicitly, from the panel below.
+        navigator.clipboard?.writeText(state.draftText).catch(() => {});
         updatePostSubmitPanel();
       }
     },
@@ -205,19 +210,6 @@ function renderDraftStep() {
   container.appendChild(el('div', { id: 'post-submit-panel' }, state.submitted ? [postSubmitPanel()] : []));
 
   return container;
-}
-
-// Phase 2 — Google Review Handoff (REVIEWSETU_BRIEF.md "Actual flow").
-// Google's write-review page can't be pre-filled or embedded (X-Frame-Options,
-// no fill parameter), so this just opens it in a new tab and copies the
-// draft to the clipboard for the customer to paste there themselves.
-// window.open() runs first and synchronously, still inside the click
-// handler's user-gesture — the clipboard write is fire-and-forget after it,
-// so a slow/denied clipboard permission can never make the tab-open look
-// browser-blocked.
-function openGoogleReviewTab(draftText) {
-  window.open(GOOGLE_REVIEW_URL, '_blank', 'noopener');
-  navigator.clipboard?.writeText(draftText).catch(() => {});
 }
 
 function postSubmitPanel() {
@@ -245,6 +237,14 @@ function finishInstructionsPanel() {
     steps,
     el('div', { class: 'finish-actions' }, [
       el('button', {
+        class: 'btn-primary',
+        type: 'button',
+        html: `${lang.ui.continueToGoogleBtn}${iconMarkup('arrowRight')}`,
+        onclick: () => {
+          window.location.href = GOOGLE_REVIEW_URL;
+        },
+      }),
+      el('button', {
         class: 'btn-secondary',
         type: 'button',
         text: lang.ui.copyAgainBtn,
@@ -256,13 +256,6 @@ function finishInstructionsPanel() {
             })
             .catch(() => {});
         },
-      }),
-      el('a', {
-        class: 'btn-secondary',
-        href: GOOGLE_REVIEW_URL,
-        target: '_blank',
-        rel: 'noopener',
-        text: lang.ui.openGoogleLinkText,
       }),
       copyFeedback,
     ]),
@@ -278,10 +271,15 @@ function thankYouPanel() {
 }
 
 // There is no signal from Google itself confirming a post — this only
-// detects that the customer switched back to this tab after tapping Post
-// Review, per the brief's explicit instruction not to claim more than that.
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && state.submitted && !state.returned) {
+// detects that the customer came back to this page after tapping Continue
+// to Google, per the brief's explicit instruction not to claim more than
+// that. pageshow, not visibilitychange: this is a same-tab navigate-away
+// (Continue to Google) and navigate-back (browser back button) flow, and
+// pageshow is what reliably fires on that back-navigation — including the
+// common case of the page being restored from bfcache — where
+// visibilitychange does not.
+window.addEventListener('pageshow', () => {
+  if (state.submitted && !state.returned) {
     state.returned = true;
     updatePostSubmitPanel();
   }

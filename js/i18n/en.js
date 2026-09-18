@@ -42,7 +42,7 @@ export default {
     ],
     copyAgainBtn: 'Copy review text again',
     copiedFeedback: 'Copied!',
-    openGoogleLinkText: 'Open Google Review page',
+    continueToGoogleBtn: 'Continue to Google',
     thankYouTitle: 'Thank you!',
     thankYouMessage: 'We hope you were able to post your review on Google. Your feedback means a lot to us.',
   },
