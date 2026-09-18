@@ -34,11 +34,9 @@ export const LANG_STORAGE_KEY = 'reviewsetu_lang';
 
 // Decorative flavor text (REVIEWSETU_DESIGN_SPEC.md.docx "Rotate one
 // cursive tagline per major step"). Spec explicitly allows this to stay
-// English-only regardless of selected language. Intro gets its own fixed
-// line; the rest of the flow (rating/category/questions) rotates through
-// the pool. The draft screen intentionally shows none (spec: "no
-// decorative wave/gradient background on this screen").
-export const TAGLINE_INTRO = 'Together for a Better Tomorrow';
+// English-only regardless of selected language. Rotates through the pool
+// across rating/category/questions. The draft screen intentionally shows
+// none (spec: "no decorative wave/gradient background on this screen").
 export const TAGLINE_MIDFLOW_POOL = [
   'Better Products Happier Communities',
   'Your Feedback Drives Progress',
@@ -55,3 +53,9 @@ export const TRUST_STRIP = [
   { icon: 'clock', text: 'Takes about 2 minutes' },
   { icon: 'users', text: 'Helps us serve you better' },
 ];
+
+// Phase 2 — Google Review Handoff (REVIEWSETU_BRIEF.md "Actual flow").
+// Google does not support pre-filled review text or iframe embedding, so
+// this just opens Google's own write-review page in a new tab; the
+// customer pastes the copied draft there themselves.
+export const GOOGLE_REVIEW_URL = 'https://g.page/r/CXHNyW-vZhAlEBM/review';

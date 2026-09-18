@@ -17,6 +17,12 @@ export function createState(langCode) {
     // enforced here in state rather than left to UI wiring.
     draftLoaded: false,
     submitted: false,
+    // Phase 2 (Google handoff): true once the customer has switched back
+    // to this tab after tapping Post Review. Set directly by app.js from
+    // a visibilitychange listener — there's no signal from Google itself,
+    // so this only ever confirms they returned to the tab, not that they
+    // posted. See trySubmitReview() below, which is unchanged.
+    returned: false,
   };
 }
 

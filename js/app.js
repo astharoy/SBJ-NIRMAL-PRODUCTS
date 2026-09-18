@@ -1,4 +1,4 @@
-import { CATEGORY_IDS, CATEGORY_ICONS, QUESTIONS_PER_CATEGORY, LANG_STORAGE_KEY, TAGLINE_MIDFLOW_POOL, TRUST_STRIP } from './constants.js';
+import { CATEGORY_IDS, CATEGORY_ICONS, QUESTIONS_PER_CATEGORY, LANG_STORAGE_KEY, TAGLINE_MIDFLOW_POOL, TRUST_STRIP, GOOGLE_REVIEW_URL } from './constants.js';
 import { LANGUAGES, getLanguage, detectLanguage } from './i18n/index.js';
 import { iconMarkup, ICON_TRIADS } from './icons.js';
 import {
@@ -191,28 +191,101 @@ function renderDraftStep() {
     onclick: () => {
       const ok = trySubmitReview(state);
       if (ok) {
-        renderSubmitMessage();
+        // A fresh Post Review tap (e.g. after editing the draft further)
+        // always re-opens the flow from the "finish on Google" step, even
+        // if a previous attempt already reached the thank-you message.
+        state.returned = false;
+        openGoogleReviewTab(state.draftText);
+        updatePostSubmitPanel();
       }
     },
   });
   container.appendChild(submitBtn);
 
-  const messageSlot = el('div', { class: 'submit-message', id: 'submit-message' });
-  if (state.submitted) {
-    messageSlot.textContent = lang.ui.comingSoon;
-    messageSlot.classList.add('submit-message-visible');
-  }
-  container.appendChild(messageSlot);
+  container.appendChild(el('div', { id: 'post-submit-panel' }, state.submitted ? [postSubmitPanel()] : []));
 
   return container;
 }
 
-function renderSubmitMessage() {
-  const slot = document.getElementById('submit-message');
-  if (!slot) return;
-  slot.textContent = t().ui.comingSoon;
-  slot.classList.add('submit-message-visible');
+// Phase 2 — Google Review Handoff (REVIEWSETU_BRIEF.md "Actual flow").
+// Google's write-review page can't be pre-filled or embedded (X-Frame-Options,
+// no fill parameter), so this just opens it in a new tab and copies the
+// draft to the clipboard for the customer to paste there themselves.
+// window.open() runs first and synchronously, still inside the click
+// handler's user-gesture — the clipboard write is fire-and-forget after it,
+// so a slow/denied clipboard permission can never make the tab-open look
+// browser-blocked.
+function openGoogleReviewTab(draftText) {
+  window.open(GOOGLE_REVIEW_URL, '_blank', 'noopener');
+  navigator.clipboard?.writeText(draftText).catch(() => {});
 }
+
+function postSubmitPanel() {
+  return state.returned ? thankYouPanel() : finishInstructionsPanel();
+}
+
+function updatePostSubmitPanel() {
+  const panel = document.getElementById('post-submit-panel');
+  if (!panel) return;
+  panel.innerHTML = '';
+  panel.appendChild(postSubmitPanel());
+}
+
+function finishInstructionsPanel() {
+  const lang = t();
+  const steps = el('ol', { class: 'finish-steps' });
+  lang.ui.finishSteps.forEach((stepText) => {
+    steps.appendChild(el('li', { text: stepText }));
+  });
+
+  const copyFeedback = el('span', { class: 'copy-feedback' });
+
+  return el('div', { class: 'finish-panel' }, [
+    el('h2', { class: 'finish-title', text: lang.ui.finishTitle }),
+    steps,
+    el('div', { class: 'finish-actions' }, [
+      el('button', {
+        class: 'btn-secondary',
+        type: 'button',
+        text: lang.ui.copyAgainBtn,
+        onclick: () => {
+          navigator.clipboard
+            ?.writeText(state.draftText)
+            .then(() => {
+              copyFeedback.textContent = lang.ui.copiedFeedback;
+            })
+            .catch(() => {});
+        },
+      }),
+      el('a', {
+        class: 'btn-secondary',
+        href: GOOGLE_REVIEW_URL,
+        target: '_blank',
+        rel: 'noopener',
+        text: lang.ui.openGoogleLinkText,
+      }),
+      copyFeedback,
+    ]),
+  ]);
+}
+
+function thankYouPanel() {
+  const lang = t();
+  return el('div', { class: 'finish-panel thankyou-panel' }, [
+    el('h2', { class: 'finish-title', text: lang.ui.thankYouTitle }),
+    el('p', { class: 'hint', text: lang.ui.thankYouMessage }),
+  ]);
+}
+
+// There is no signal from Google itself confirming a post — this only
+// detects that the customer switched back to this tab after tapping Post
+// Review, per the brief's explicit instruction not to claim more than that.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && state.submitted && !state.returned) {
+    state.returned = true;
+    updatePostSubmitPanel();
+  }
+});
 
 function renderLangMenu() {
   langMenu.innerHTML = '';

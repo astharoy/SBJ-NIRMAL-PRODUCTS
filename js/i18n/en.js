@@ -23,9 +23,6 @@ export default {
     appName: 'ReviewSetu',
     startOver: 'Start Over',
     languageLabel: 'Language',
-    introTitle: 'Your opinion helps us grow',
-    introSubtitle: 'Take a few minutes to share your experience. Your feedback helps us serve you better.',
-    startReview: 'Start Review',
     ratingPrompt: 'How would you rate your experience?',
     categoryPrompt: 'Which product are you reviewing?',
     questionProgress: (n, total) => `Question ${n} of ${total}`,
@@ -33,7 +30,21 @@ export default {
     draftTitle: 'Your review draft',
     draftInstruction: 'Edit, add, or remove anything you like before posting.',
     postReview: 'Post Review',
-    comingSoon: 'Google posting is coming soon! For now, copy the review below to post it yourself.',
+    // Phase 2 — Google Review Handoff. Shown on this (original) tab once
+    // Post Review is tapped; a second, separate tab opens straight to
+    // Google's own review page (we cannot embed or pre-fill it).
+    finishTitle: 'Finish posting on Google',
+    finishSteps: [
+      'Tap the stars to rate us',
+      'Tap the review box',
+      'Paste your review (long-press → Paste)',
+      'Tap Post',
+    ],
+    copyAgainBtn: 'Copy review text again',
+    copiedFeedback: 'Copied!',
+    openGoogleLinkText: 'Open Google Review page',
+    thankYouTitle: 'Thank you!',
+    thankYouMessage: 'We hope you were able to post your review on Google. Your feedback means a lot to us.',
   },
 
   // Shared template bank, tiered by how common each style is in the

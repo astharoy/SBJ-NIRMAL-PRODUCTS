@@ -492,6 +492,29 @@ h1, h2, .heading {
   background: var(--red-dark);
 }
 
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: none;
+  color: var(--ink);
+  border: 1px solid var(--muted);
+  border-radius: var(--radius);
+  padding: 11px 18px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: var(--font-ui);
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
 /* ---------- Draft / edit screen ---------- */
 
 .draft-textarea {
@@ -513,17 +536,47 @@ h1, h2, .heading {
   box-shadow: 0 0 0 4px var(--red-tint);
 }
 
-.submit-message {
-  display: none;
-  padding: 13px 16px;
+.finish-panel {
+  padding: 18px 20px;
   border-radius: var(--radius);
   background: var(--red-tint);
-  color: var(--ink);
-  font-size: 0.9rem;
 }
 
-.submit-message-visible {
-  display: block;
+.finish-title {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.finish-steps {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.finish-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.finish-actions .btn-secondary {
+  background: var(--bg);
+}
+
+.copy-feedback {
+  font-size: 0.85rem;
+  color: var(--red);
+  font-weight: 600;
+}
+
+.thankyou-panel .hint {
+  margin: 0;
+  color: var(--ink);
 }
 
 /* ---------- Footer ---------- */
