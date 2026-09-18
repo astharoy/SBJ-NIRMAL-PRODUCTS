@@ -1,9 +1,8 @@
-import { CATEGORY_IDS, CATEGORY_ICONS, QUESTIONS_PER_CATEGORY, LANG_STORAGE_KEY, TAGLINE_INTRO, TAGLINE_MIDFLOW_POOL, TRUST_STRIP } from './constants.js';
+import { CATEGORY_IDS, CATEGORY_ICONS, QUESTIONS_PER_CATEGORY, LANG_STORAGE_KEY, TAGLINE_MIDFLOW_POOL, TRUST_STRIP } from './constants.js';
 import { LANGUAGES, getLanguage, detectLanguage } from './i18n/index.js';
 import { iconMarkup, ICON_TRIADS } from './icons.js';
 import {
   createState,
-  startReview,
   selectRating,
   selectCategory,
   answerQuestion,
@@ -84,29 +83,9 @@ function optionCard({ label, iconName, onclick }) {
   );
 }
 
-function renderIntroStep() {
-  const lang = t();
-  const container = el('section', { class: 'step step-intro' });
-  container.appendChild(el('h1', { class: 'prompt', text: lang.ui.introTitle }));
-  container.appendChild(el('p', { class: 'hint', text: lang.ui.introSubtitle }));
-  container.appendChild(
-    el('button', {
-      class: 'btn-primary',
-      type: 'button',
-      html: `${lang.ui.startReview}${iconMarkup('arrowRight')}`,
-      onclick: () => {
-        startReview(state);
-        render();
-      },
-    })
-  );
-  return container;
-}
-
 function renderRatingStep() {
   const lang = t();
   const container = el('section', { class: 'step step-rating' });
-  container.appendChild(backLink());
   container.appendChild(el('h1', { class: 'prompt', text: lang.ui.ratingPrompt }));
 
   const stars = el('div', { class: 'stars' });
@@ -291,11 +270,9 @@ function renderTrustStrip() {
 }
 
 // Decorative cursive flavor text (spec: can stay English regardless of
-// selected language). Intro gets its own fixed line; the rest of the flow
-// rotates through the pool, keyed by step name for a little variety.
-// The draft step shows none (CSS hides .tagline-script there).
+// selected language), rotating through the pool by step name for a little
+// variety. The draft step shows none (CSS hides .tagline-script there).
 function taglineFor(step) {
-  if (step === 'intro') return TAGLINE_INTRO;
   const pool = TAGLINE_MIDFLOW_POOL;
   const index = ['rating', 'category', 'questions'].indexOf(step) % pool.length;
   return pool[Math.max(index, 0)];
@@ -311,8 +288,7 @@ function render() {
 
   root.innerHTML = '';
   let stepEl;
-  if (state.step === 'intro') stepEl = renderIntroStep();
-  else if (state.step === 'rating') stepEl = renderRatingStep();
+  if (state.step === 'rating') stepEl = renderRatingStep();
   else if (state.step === 'category') stepEl = renderCategoryStep();
   else if (state.step === 'questions') stepEl = renderQuestionsStep();
   else stepEl = renderDraftStep();
