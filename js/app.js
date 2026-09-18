@@ -1,19 +1,22 @@
-import { CATEGORY_IDS, CATEGORY_ICONS, QUESTIONS_PER_CATEGORY, LANG_STORAGE_KEY } from './constants.js';
+import { CATEGORY_IDS, CATEGORY_ICONS, QUESTIONS_PER_CATEGORY, LANG_STORAGE_KEY, TAGLINE_INTRO, TAGLINE_MIDFLOW_POOL, TRUST_STRIP } from './constants.js';
 import { LANGUAGES, getLanguage, detectLanguage } from './i18n/index.js';
+import { iconMarkup, ICON_TRIADS } from './icons.js';
 import {
   createState,
+  startReview,
   selectRating,
   selectCategory,
   answerQuestion,
   goBack,
   trySubmitReview,
-  restart,
 } from './state.js';
 
 const root = document.getElementById('app-main');
-const startOverBtn = document.getElementById('start-over');
+const stage = document.getElementById('stage');
 const langToggle = document.getElementById('lang-toggle');
 const langMenu = document.getElementById('lang-menu');
+const taglineEl = document.getElementById('tagline-script');
+const trustStripEl = document.getElementById('trust-strip');
 
 const initialLang = localStorage.getItem(LANG_STORAGE_KEY) || detectLanguage();
 const state = createState(initialLang);
@@ -27,6 +30,7 @@ function el(tag, attrs = {}, children = []) {
   for (const [key, value] of Object.entries(attrs)) {
     if (key === 'class') node.className = value;
     else if (key === 'text') node.textContent = value;
+    else if (key === 'html') node.innerHTML = value;
     else if (key.startsWith('on') && typeof value === 'function') {
       node.addEventListener(key.slice(2), value);
     } else {
@@ -39,26 +43,76 @@ function el(tag, attrs = {}, children = []) {
   return node;
 }
 
-function renderProgressDots(currentIndex, total) {
-  const wrap = el('div', { class: 'progress-dots' });
-  for (let i = 0; i < total; i += 1) {
-    wrap.appendChild(
-      el('span', { class: 'dot' + (i <= currentIndex ? ' dot-filled' : '') })
-    );
-  }
+function backLink() {
+  return el('button', {
+    class: 'back-link',
+    type: 'button',
+    html: `${iconMarkup('arrowLeft')}<span>${t().ui.back}</span>`,
+    onclick: () => {
+      goBack(state);
+      render();
+    },
+  });
+}
+
+function progressBar(currentIndex, total) {
+  const pct = Math.round(((currentIndex + 1) / total) * 100);
+  const wrap = el('div', { class: 'progress' }, [
+    el('div', { class: 'progress-row' }, [
+      el('span', { text: t().ui.questionProgress(currentIndex + 1, total) }),
+      el('span', { class: 'pct', text: `${pct}%` }),
+    ]),
+    el('div', { class: 'progress-track' }, [
+      el('div', { class: 'progress-fill', style: `width:${pct}%` }),
+    ]),
+  ]);
   return wrap;
+}
+
+function optionCard({ label, iconName, onclick }) {
+  const icon = iconName
+    ? el('span', { class: 'option-icon', html: iconMarkup(iconName) })
+    : null;
+  return el(
+    'button',
+    { class: 'option-card', type: 'button', onclick },
+    [
+      el('span', { class: 'option-radio' }),
+      el('span', { class: 'option-body' }, [el('span', { class: 'option-label', text: label })]),
+      icon,
+    ]
+  );
+}
+
+function renderIntroStep() {
+  const lang = t();
+  const container = el('section', { class: 'step step-intro' });
+  container.appendChild(el('h1', { class: 'prompt', text: lang.ui.introTitle }));
+  container.appendChild(el('p', { class: 'hint', text: lang.ui.introSubtitle }));
+  container.appendChild(
+    el('button', {
+      class: 'btn-primary',
+      type: 'button',
+      html: `${lang.ui.startReview}${iconMarkup('arrowRight')}`,
+      onclick: () => {
+        startReview(state);
+        render();
+      },
+    })
+  );
+  return container;
 }
 
 function renderRatingStep() {
   const lang = t();
   const container = el('section', { class: 'step step-rating' });
+  container.appendChild(backLink());
   container.appendChild(el('h1', { class: 'prompt', text: lang.ui.ratingPrompt }));
 
   const stars = el('div', { class: 'stars' });
   for (let i = 1; i <= 5; i += 1) {
-    const filled = state.rating !== null && i <= state.rating;
     const star = el('button', {
-      class: 'star-btn' + (filled ? ' star-filled' : ''),
+      class: 'star-btn',
       type: 'button',
       'aria-label': `${i} star`,
       text: '★',
@@ -76,28 +130,29 @@ function renderRatingStep() {
 function renderCategoryStep() {
   const lang = t();
   const container = el('section', { class: 'step step-category' });
-  container.appendChild(backButton());
+  container.appendChild(backLink());
   container.appendChild(el('h1', { class: 'prompt', text: lang.ui.categoryPrompt }));
 
   const grid = el('div', { class: 'category-grid' });
   CATEGORY_IDS.forEach((id) => {
     const cat = lang.categories[id];
-    const card = el(
-      'button',
-      {
-        class: 'category-card',
-        type: 'button',
-        onclick: () => {
-          selectCategory(state, id);
-          render();
+    grid.appendChild(
+      el(
+        'button',
+        {
+          class: 'option-card',
+          type: 'button',
+          onclick: () => {
+            selectCategory(state, id);
+            render();
+          },
         },
-      },
-      [
-        el('span', { class: 'category-icon', text: CATEGORY_ICONS[id] }),
-        el('span', { class: 'category-label', text: cat.label }),
-      ]
+        [
+          el('span', { class: 'option-icon', text: CATEGORY_ICONS[id] }),
+          el('span', { class: 'option-label', text: cat.label }),
+        ]
+      )
     );
-    grid.appendChild(card);
   });
   container.appendChild(grid);
   return container;
@@ -107,30 +162,25 @@ function renderQuestionsStep() {
   const lang = t();
   const category = lang.categories[state.categoryId];
   const question = category.questions[state.questionIndex];
+  const triad = ICON_TRIADS[question.id];
 
   const container = el('section', { class: 'step step-questions' });
-  container.appendChild(backButton());
-  container.appendChild(
-    el('p', {
-      class: 'progress-label',
-      text: lang.ui.questionProgress(state.questionIndex + 1, QUESTIONS_PER_CATEGORY),
-    })
-  );
-  container.appendChild(renderProgressDots(state.questionIndex, QUESTIONS_PER_CATEGORY));
+  container.appendChild(backLink());
+  container.appendChild(progressBar(state.questionIndex, QUESTIONS_PER_CATEGORY));
   container.appendChild(el('h1', { class: 'prompt', text: question.text }));
 
   const optionsWrap = el('div', { class: 'option-list' });
   question.options.forEach((optionText, optionIndex) => {
-    const btn = el('button', {
-      class: 'option-btn',
-      type: 'button',
-      text: optionText,
-      onclick: () => {
-        answerQuestion(state, optionIndex);
-        render();
-      },
-    });
-    optionsWrap.appendChild(btn);
+    optionsWrap.appendChild(
+      optionCard({
+        label: optionText,
+        iconName: triad ? triad[optionIndex] : null,
+        onclick: () => {
+          answerQuestion(state, optionIndex);
+          render();
+        },
+      })
+    );
   });
   container.appendChild(optionsWrap);
   return container;
@@ -139,7 +189,7 @@ function renderQuestionsStep() {
 function renderDraftStep() {
   const lang = t();
   const container = el('section', { class: 'step step-draft' });
-  container.appendChild(backButton());
+  container.appendChild(backLink());
   container.appendChild(el('h1', { class: 'prompt', text: lang.ui.draftTitle }));
   container.appendChild(el('p', { class: 'hint', text: lang.ui.draftInstruction }));
 
@@ -156,9 +206,9 @@ function renderDraftStep() {
   container.appendChild(textarea);
 
   const submitBtn = el('button', {
-    class: 'submit-btn',
+    class: 'btn-primary',
     type: 'button',
-    text: lang.ui.postReview,
+    html: `${lang.ui.postReview}${iconMarkup('arrowRight')}`,
     onclick: () => {
       const ok = trySubmitReview(state);
       if (ok) {
@@ -183,18 +233,6 @@ function renderSubmitMessage() {
   if (!slot) return;
   slot.textContent = t().ui.comingSoon;
   slot.classList.add('submit-message-visible');
-}
-
-function backButton() {
-  return el('button', {
-    class: 'back-btn',
-    type: 'button',
-    text: `← ${t().ui.back}`,
-    onclick: () => {
-      goBack(state);
-      render();
-    },
-  });
 }
 
 function renderLangMenu() {
@@ -240,20 +278,41 @@ document.addEventListener('click', (event) => {
   }
 });
 
-startOverBtn.addEventListener('click', () => {
-  restart(state);
-  render();
-});
+function renderTrustStrip() {
+  trustStripEl.innerHTML = '';
+  TRUST_STRIP.forEach((item) => {
+    trustStripEl.appendChild(
+      el('div', { class: 'trust-item' }, [
+        el('span', { class: 'trust-icon', html: iconMarkup(item.icon) }),
+        el('span', { text: item.text }),
+      ])
+    );
+  });
+}
+
+// Decorative cursive flavor text (spec: can stay English regardless of
+// selected language). Intro gets its own fixed line; the rest of the flow
+// rotates through the pool, keyed by step name for a little variety.
+// The draft step shows none (CSS hides .tagline-script there).
+function taglineFor(step) {
+  if (step === 'intro') return TAGLINE_INTRO;
+  const pool = TAGLINE_MIDFLOW_POOL;
+  const index = ['rating', 'category', 'questions'].indexOf(step) % pool.length;
+  return pool[Math.max(index, 0)];
+}
 
 function render() {
   document.documentElement.lang = state.lang;
-  langToggle.textContent = `${t().ui.languageLabel}: ${t().name}`;
-  startOverBtn.textContent = t().ui.startOver;
+  langToggle.innerHTML = `${iconMarkup('globe')}<span>${t().name}</span>${iconMarkup('chevronDown', 'chevron')}`;
   closeLangMenu();
+
+  stage.dataset.step = state.step;
+  taglineEl.textContent = taglineFor(state.step);
 
   root.innerHTML = '';
   let stepEl;
-  if (state.step === 'rating') stepEl = renderRatingStep();
+  if (state.step === 'intro') stepEl = renderIntroStep();
+  else if (state.step === 'rating') stepEl = renderRatingStep();
   else if (state.step === 'category') stepEl = renderCategoryStep();
   else if (state.step === 'questions') stepEl = renderQuestionsStep();
   else stepEl = renderDraftStep();
@@ -261,4 +320,5 @@ function render() {
   root.appendChild(stepEl);
 }
 
+renderTrustStrip();
 render();

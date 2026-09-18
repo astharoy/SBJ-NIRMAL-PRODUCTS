@@ -4,21 +4,70 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ReviewSetu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <div class="app">
     <header class="app-header">
-      <span class="brand">ReviewSetu</span>
-      <div class="header-actions">
-        <button id="start-over" class="start-over-btn" type="button">Start Over</button>
+      <div class="header-spacer" aria-hidden="true"></div>
+      <div class="logo-mark" aria-label="ReviewSetu">
+        <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <rect x="6" y="8" width="30" height="24" rx="8" fill="#D32F2F" />
+          <path d="M36 16 L44 8" stroke="#D32F2F" stroke-width="3" stroke-linecap="round" />
+          <path d="M39 22 L46 20" stroke="#D32F2F" stroke-width="3" stroke-linecap="round" />
+          <path d="M12 32 L8 40 L18 32 Z" fill="#D32F2F" />
+          <path
+            d="M21 20l1.8 4 4.2.6-3 3 .7 4.2L21 29.8 17.3 31.8 18 27.6l-3-3 4.2-.6z"
+            fill="#FFFFFF"
+          />
+        </svg>
+        <span class="logo-text">
+          <span class="logo-wordmark">Review<span class="accent">Setu</span></span>
+          <span class="logo-tagline">Your feedback. Our improvement.</span>
+        </span>
+      </div>
+      <div class="header-side">
         <div class="lang-picker">
           <button id="lang-toggle" class="lang-toggle" type="button" aria-haspopup="listbox" aria-expanded="false"></button>
           <ul id="lang-menu" class="lang-menu hidden" role="listbox"></ul>
         </div>
       </div>
     </header>
-    <main id="app-main" class="app-main"></main>
+
+    <div class="stage" id="stage">
+      <div class="wave-bg" aria-hidden="true">
+        <svg viewBox="0 0 500 220" preserveAspectRatio="none">
+          <path
+            d="M0,120 C120,180 200,60 320,110 C400,145 460,90 500,100 L500,220 L0,220 Z"
+            fill="#F8D7D7"
+          />
+        </svg>
+      </div>
+      <div class="side-tagline side-tagline-left" aria-hidden="true">Better Products<br />Happier Communities</div>
+      <main id="app-main" class="app-main"></main>
+      <p class="tagline-script" id="tagline-script" aria-hidden="true"></p>
+      <div class="side-tagline side-tagline-right" aria-hidden="true">Your Feedback Builds<br />a Stronger Tomorrow.</div>
+    </div>
+
+    <footer class="app-footer">
+      <div class="footer-inner">
+        <div class="sbj-block">
+          <img src="assets/sbj-logo.png" alt="SBJ Nirmal" />
+          <span class="sbj-block-text">
+            <span class="sbj-wordmark">SBJ</span><br />
+            <span class="sbj-tagline">Trusted for a stronger tomorrow</span>
+          </span>
+        </div>
+        <div class="trust-strip" id="trust-strip"></div>
+        <p class="footer-tagline" aria-hidden="true">Together<br />for a Better Tomorrow</p>
+      </div>
+    </footer>
   </div>
   <script type="module" src="js/app.js"></script>
 </body>
